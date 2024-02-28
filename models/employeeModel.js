@@ -2,17 +2,18 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const employeeModel = mongoose.Schema({
+  attendance: [],
   products: [],
-  firstname: {
+  name: {
     type: String,
-    minLength: [4, "Frist Name should be atleast 4 character "],
+    minLength: [6, "Frist Name should be atleast 4 character "],
     require: [true, "Frist Name is required"],
   },
-  lastname: {
-    type: String,
-    minLength: [4, "Last Name should be atleast 4 character"],
-    require: [true, "Last Name is required"],
-  },
+  // lastname: {
+  //   type: String,
+  //   minLength: [4, "Last Name should be atleast 4 character"],
+  //   require: [true, "Last Name is required"],
+  // },
   email: {
     unique: true,
     type: String,
@@ -32,13 +33,15 @@ const employeeModel = mongoose.Schema({
     require: [true, "Password is required"],
     select: false,
   },
-  personaldocument: {
+  document: {
     type: String,
   },
   joindate: {
     type: String,
   },
-  attendance: [],
+  role: {
+    type: String,
+  },
 });
 
 employeeModel.pre("save", function () {
