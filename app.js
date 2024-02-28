@@ -10,6 +10,8 @@ const logger = require("morgan");
 app.use(logger("tiny"));
 
 //Configure CORS
+//calling api
+app.use(require("cors")({ origin: true, credentials: true }));
 
 //BodyParser
 app.use(express.json());
