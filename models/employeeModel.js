@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const employeeModel = mongoose.Schema({
   attendance: [],
-  products: [],
+  services: [{ type: mongoose.Schema.Types.ObjectId, ref: "incomeDetails" }],
   name: {
     type: String,
     minLength: [6, "Frist Name should be atleast 4 character "],
@@ -37,9 +37,12 @@ const employeeModel = mongoose.Schema({
     type: String,
   },
   joindate: {
-    type: String,
+    type: {},
   },
   role: {
+    type: String,
+  },
+  gander: {
     type: String,
   },
 });

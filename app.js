@@ -35,6 +35,7 @@ app.use(cookieparser());
 
 //Routes
 app.use("/api/employee", require("./routes/employeeRoute.js"));
+app.use("/api/admin", require("./routes/adminRoute.js"));
 
 //Error Handling
 const ErrorHandler = require("./utils/ErrorHandler.js");
