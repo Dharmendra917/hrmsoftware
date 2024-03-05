@@ -32,6 +32,8 @@ app.use(
 app.use(cookieparser());
 
 //Express File Uploader
+const fileupload = require("express-fileupload");
+app.use(fileupload());
 
 //Routes
 app.use("/api/employee", require("./routes/employeeRoute.js"));
