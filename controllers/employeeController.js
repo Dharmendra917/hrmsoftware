@@ -44,12 +44,11 @@ exports.signin = catchAsyncErrors(async (req, res, next) => {
   const isMatch = employee.comparepassword(req.body.password);
   if (!isMatch) return next(new ErrorHandler("Wrong Password", 500));
 
-  const currentDate = Date.now();
+  const currentDate = new Date();
   await employee.attendance.push(currentDate);
   employee.save();
 
   SendToken(employee, 201, res);
-  // res.status(201).json(employee);
 });
 
 exports.signout = catchAsyncErrors(async (req, res, next) => {
