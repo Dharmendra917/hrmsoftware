@@ -3,6 +3,7 @@ const { catchAsyncErrors } = require("../middlewares/catchAsyncErrors");
 const ErrorHandler = require("../utils/ErrorHandler");
 const { SendToken } = require("../utils/SendToken");
 const incomeDetails = require("../models/incomeDetails");
+const { upload } = require("../middlewares/multer");
 
 exports.home = catchAsyncErrors(async (req, res) => {
   res.status(200).json({ message: "this is  Home Route" });
@@ -17,9 +18,17 @@ exports.currentEmployee = catchAsyncErrors(async (req, res) => {
 });
 
 exports.signup = catchAsyncErrors(async (req, res, next) => {
-  const data = req.body;
-  const all = await new employeeModel(data).save();
-  res.status(201).json({ message: "create successfully" });
+  // const file = req.file;
+  // console.log(file);
+  // if (!file) {
+  //   return next(new ErrorHandler("No File Uploaded", 400));
+  // }
+  // const filename = req.file.originalname;
+  // const data = req.file.buffer;
+  // const document = { filename, data };
+  const info = await new employeeModel(req.body);
+  info.save();
+  res.status(201).json({ message: "Create successfully", info });
 });
 
 exports.signin = catchAsyncErrors(async (req, res, next) => {
@@ -48,13 +57,18 @@ exports.signout = catchAsyncErrors(async (req, res, next) => {
   res.json({ message: "Successfully Singout!" });
 });
 
-exports.employees = catchAsyncErrors(async (req, res, next) => {
-  const employees = await employeeModel.find().exec();
-  res.json({ message: " All Employees!", employees });
+exports.document = catchAsyncErrors(async (req, res, next) => {
+  upload.single("document")(req, res, (err) => {
+    if (err) {
+      return next(new ErrorHandler(err, 500));
+    }
+    const file = req.file;
+    res.json({ message: "File uploaded successfully!", file });
+  });
 });
 
 // Service ------------
-exports.service = catchAsyncErrors(async (req, res, next) => {
+exports.addincome = catchAsyncErrors(async (req, res, next) => {
   const data = req.body;
   const employee = await employeeModel.findById(req.id);
   const service = await incomeDetails(data).save();
@@ -67,9 +81,4 @@ exports.service = catchAsyncErrors(async (req, res, next) => {
   res.json({
     message: "submmit successfully",
   });
-});
-
-exports.allservice = catchAsyncErrors(async (req, res, next) => {
-  const all = await incomeDetails.find().populate("employee").exec();
-  res.status(201).json(all);
 });

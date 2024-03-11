@@ -1,60 +1,42 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const employeeModel = mongoose.Schema({
-  attendance: [],
-  services: [{ type: mongoose.Schema.Types.ObjectId, ref: "incomeDetails" }],
+
+const adminModel = mongoose.Schema({
   name: {
     type: String,
-    minLength: [6, "Name should be atleast 6 character "],
+    minLength: [6, "Name should be atleast 4 character "],
     require: [true, "Name is required"],
   },
-  // lastname: {
-  //   type: String,
-  //   minLength: [4, "Last Name should be atleast 4 character"],
-  //   require: [true, "Last Name is required"],
-  // },
   email: {
-    unique: true,
     type: String,
+    unique: [true, "Email is already Exist"],
     require: [true, "Email is required"],
     match: [
       /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
       "Please fill a valid email address",
     ],
   },
-  contact: {
-    type: String,
-    require: [true, "Contact No is required"],
-    minLength: [10, "Contact No. Should be atleast 10 digit"],
-  },
   password: {
     type: String,
     require: [true, "Password is required"],
     select: false,
   },
-  document: {
-    filename: String,
-    data: Buffer,
-  },
-  joindate: {
-    type: {},
-  },
-  role: {
+  contact: {
     type: String,
-  },
-  gander: {
-    type: String,
+    require,
   },
   avatar: {
     type: Object,
+    filename: String,
+    data: Buffer,
     default: {
       url: "https://toppng.com/uploads/preview/donna-picarro-dummy-avatar-115633298255iautrofxa.png",
     },
   },
 });
 
-employeeModel.pre("save", function () {
+adminModel.pre("save", function () {
   if (!this.isModified("password")) {
     return;
   }
@@ -64,14 +46,15 @@ employeeModel.pre("save", function () {
 });
 
 //compare password
-employeeModel.methods.comparepassword = function (password) {
+adminModel.methods.comparepassword = function (password) {
   return bcrypt.compareSync(password, this.password);
 };
 
 //jwt
-employeeModel.methods.getjwttoken = function () {
+adminModel.methods.getjwttoken = function () {
   return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRE,
   });
 };
-module.exports = mongoose.model("employee", employeeModel);
+
+module.exports = mongoose.model("admin", adminModel);
