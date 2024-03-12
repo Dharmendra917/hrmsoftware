@@ -36,9 +36,24 @@ exports.signin = catchAsyncErrors(async (req, res, next) => {
   const isMatch = employee.comparepassword(req.body.password);
   if (!isMatch) return next(new ErrorHandler("Wrong Password", 500));
 
-  employee.logs.push({
-    logingtime: new Date(),
-  });
+  const currentDate = new Date();
+  const currentyear = currentDate.getFullYear();
+  const currentMonth = currentDate.getMonth();
+  const currentDay = currentDate.getDate();
+  const year = `${currentyear}-${currentMonth + 1}-${currentDay}`;
+
+  const currentHour = currentDate.getHours();
+  const currentMinute = currentDate.getMinutes();
+  const currentSecond = currentDate.getSeconds();
+  const time = `${currentHour}:${currentMinute}:${currentSecond}`;
+
+  const logEntry = {
+    logintime: `${time} ${year}`,
+    logouttime: null,
+  };
+
+  employee.logs.push(logEntry);
+
   await employee.save();
 
   SendToken(employee, 201, res);
@@ -50,14 +65,34 @@ exports.signout = catchAsyncErrors(async (req, res, next) => {
   const currentyear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth();
   const currentDay = currentDate.getDate();
-  await employee.attendance.push(
+
+  if (
+    employee.attendance.presents[employee.attendance.presents.length - 1] !==
     `${currentyear}-${currentMonth + 1}-${currentDay}`
-  );
+  ) {
+    // console.log("abb lagi hai!");
+    await employee.attendance.presents.push(
+      `${currentyear}-${currentMonth + 1}-${currentDay}`
+    );
+  }
 
-  // employee.logs[0];
+  if (employee && employee.logs.length > 0) {
+    const currentHour = currentDate.getHours();
+    const currentMinute = currentDate.getMinutes();
+    const currentSecond = currentDate.getSeconds();
+    const time = `${currentHour}:${currentMinute}:${currentSecond}`;
+    const year = `${currentyear}-${currentMonth + 1}-${currentDay}`;
+
+    const latestLog = employee.logs[employee.logs.length - 1];
+    latestLog.logouttime = `${time} ${year}`;
+
+    // Save the changes
+    await employee.save();
+  } else {
+    return next(new ErrorHandler("Employee not found or no login records"));
+  }
   await employee.save();
-
-  res.clearCookie("token");
+  // res.clearCookie("token");
   res.json({ message: "Successfully Singout!", employee });
 });
 

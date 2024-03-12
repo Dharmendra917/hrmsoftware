@@ -1,9 +1,16 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+
 const employeeModel = mongoose.Schema({
-  attendance: [],
   services: [{ type: mongoose.Schema.Types.ObjectId, ref: "incomeDetails" }],
+  // attendance: [],
+  attendance: {
+    presents: [{ type: String }],
+    halfdays: [{ type: String }],
+    holidays: [{ type: String }],
+    leaves: [{ type: String }],
+  },
   name: {
     type: String,
     minLength: [6, "Name should be atleast 6 character "],
@@ -54,9 +61,12 @@ const employeeModel = mongoose.Schema({
   },
   logs: [
     {
-      type: Object,
-      logintime: String,
-      logouttime: String,
+      logintime: {
+        type: String,
+      },
+      logouttime: {
+        type: String,
+      },
     },
   ],
 });
