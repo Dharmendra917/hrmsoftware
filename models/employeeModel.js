@@ -52,6 +52,13 @@ const employeeModel = mongoose.Schema({
       url: "https://toppng.com/uploads/preview/donna-picarro-dummy-avatar-115633298255iautrofxa.png",
     },
   },
+  logs: [
+    {
+      type: Object,
+      logintime: String,
+      logouttime: String,
+    },
+  ],
 });
 
 employeeModel.pre("save", function () {

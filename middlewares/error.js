@@ -9,6 +9,13 @@ exports.generatedErrors = (err, req, res, next) => {
     err.message = "Employee with this Email Address already exists";
   }
 
+  if (
+    err.name === "Error" &&
+    err.message.includes("MulterError: File too large")
+  ) {
+    err.message = "Please Upload Less Than 2MB File!";
+  }
+
   res.status(statusCode).json({
     message: err.message,
     errName: err.name,

@@ -3,10 +3,9 @@ const ErrorHandler = require("../utils/ErrorHandler");
 
 const storage = multer.memoryStorage();
 const limits = {
-  fileSize: 1024 * 1024 * 3,
+  fileSize: 1024 * 1024 * 2,
 };
 const fileFilter = (req, file, cb, next) => {
-  // Example: Accept only JPEG and PNG files
   if (
     file.mimetype === "image/jpeg" ||
     file.mimetype === "image/jpg" ||

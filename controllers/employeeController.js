@@ -18,14 +18,6 @@ exports.currentEmployee = catchAsyncErrors(async (req, res) => {
 });
 
 exports.signup = catchAsyncErrors(async (req, res, next) => {
-  // const file = req.file;
-  // console.log(file);
-  // if (!file) {
-  //   return next(new ErrorHandler("No File Uploaded", 400));
-  // }
-  // const filename = req.file.originalname;
-  // const data = req.file.buffer;
-  // const document = { filename, data };
   const info = await new employeeModel(req.body);
   info.save();
   res.status(201).json({ message: "Create successfully", info });
@@ -44,24 +36,39 @@ exports.signin = catchAsyncErrors(async (req, res, next) => {
   const isMatch = employee.comparepassword(req.body.password);
   if (!isMatch) return next(new ErrorHandler("Wrong Password", 500));
 
-  const currentDate = new Date();
-  await employee.attendance.push(currentDate);
-  employee.save();
+  employee.logs.push({
+    logingtime: new Date(),
+  });
+  await employee.save();
 
   SendToken(employee, 201, res);
 });
 
 exports.signout = catchAsyncErrors(async (req, res, next) => {
+  const employee = await employeeModel.findById(req.id);
+  const currentDate = new Date();
+  const currentyear = currentDate.getFullYear();
+  const currentMonth = currentDate.getMonth();
+  const currentDay = currentDate.getDate();
+  await employee.attendance.push(
+    `${currentyear}-${currentMonth + 1}-${currentDay}`
+  );
+
+  // employee.logs[0];
+  await employee.save();
+
   res.clearCookie("token");
-  res.json({ message: "Successfully Singout!" });
+  res.json({ message: "Successfully Singout!", employee });
 });
 
 exports.document = catchAsyncErrors(async (req, res, next) => {
   upload.single("document")(req, res, (err) => {
+    const file = req.file;
+
     if (err) {
       return next(new ErrorHandler(err, 500));
     }
-    const file = req.file;
+
     res.json({ message: "File uploaded successfully!", file });
   });
 });

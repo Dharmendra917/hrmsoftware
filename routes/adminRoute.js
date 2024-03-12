@@ -6,6 +6,7 @@ const {
   signout,
   allemployee,
   oneemployee,
+  currentAdmin,
 } = require("../controllers/adminController.js");
 const { isAuthenticated } = require("../middlewares/auth.js");
 
@@ -13,6 +14,9 @@ const router = express.Router();
 
 //GET /api/admin/
 router.get("/", home);
+
+//POST /api/admin/current
+router.post("/current", isAuthenticated, currentAdmin);
 
 //POST /api/admin/signup
 router.post("/signup", signup);

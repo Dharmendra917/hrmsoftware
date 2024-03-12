@@ -9,6 +9,11 @@ exports.home = catchAsyncErrors((req, res) => {
   res.status(200).json({ message: "This is Admin Home Page" });
 });
 
+exports.currentAdmin = catchAsyncErrors(async (req, res, next) => {
+  const admin = await adminModel.findById(req.id);
+  res.status(200).json(admin);
+});
+
 exports.signup = catchAsyncErrors(async (req, res, next) => {
   data = {
     name: "Sachin Pawar",
