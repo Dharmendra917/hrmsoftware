@@ -92,7 +92,7 @@ exports.signout = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler("Employee not found or no login records"));
   }
   await employee.save();
-  // res.clearCookie("token");
+  res.clearCookie("token");
   res.json({ message: "Successfully Singout!", employee });
 });
 
