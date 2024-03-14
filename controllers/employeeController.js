@@ -20,6 +20,7 @@ exports.currentEmployee = catchAsyncErrors(async (req, res) => {
 exports.signup = catchAsyncErrors(async (req, res, next) => {
   const info = await new employeeModel(req.body);
   info.save();
+
   res.status(201).json({ message: "Create successfully", info });
 });
 
@@ -53,7 +54,6 @@ exports.signin = catchAsyncErrors(async (req, res, next) => {
   };
 
   employee.logs.push(logEntry);
-
   await employee.save();
 
   SendToken(employee, 201, res);
@@ -61,36 +61,80 @@ exports.signin = catchAsyncErrors(async (req, res, next) => {
 
 exports.signout = catchAsyncErrors(async (req, res, next) => {
   const employee = await employeeModel.findById(req.id);
+
   const currentDate = new Date();
   const currentyear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth();
   const currentDay = currentDate.getDate();
+  const year = `${currentyear}-${currentMonth + 1}-${currentDay}`;
 
-  if (
-    employee.attendance.presents[employee.attendance.presents.length - 1] !==
-    `${currentyear}-${currentMonth + 1}-${currentDay}`
-  ) {
-    // console.log("abb lagi hai!");
-    await employee.attendance.presents.push(
-      `${currentyear}-${currentMonth + 1}-${currentDay}`
-    );
-  }
+  const currentHour = currentDate.getHours();
+  const currentMinute = currentDate.getMinutes();
+  const currentSecond = currentDate.getSeconds();
+  const currentTime = `${currentHour}:${currentMinute}:${currentSecond}`;
 
+  let latestLog;
   if (employee && employee.logs.length > 0) {
-    const currentHour = currentDate.getHours();
-    const currentMinute = currentDate.getMinutes();
-    const currentSecond = currentDate.getSeconds();
-    const time = `${currentHour}:${currentMinute}:${currentSecond}`;
-    const year = `${currentyear}-${currentMonth + 1}-${currentDay}`;
+    latestLog = employee.logs[employee.logs.length - 1];
 
-    const latestLog = employee.logs[employee.logs.length - 1];
-    latestLog.logouttime = `${time} ${year}`;
-
-    // Save the changes
+    latestLog.logouttime = `${currentTime} ${year}`;
     await employee.save();
   } else {
     return next(new ErrorHandler("Employee not found or no login records"));
   }
+  console.log(latestLog);
+  const loginTime = latestLog.logintime;
+  const [time, date] = loginTime.split(" ");
+  const [hour, minute, second] = time.split(":").map(Number);
+  const [Year, month, day] = date.split("-").map(Number);
+  const dateObject = new Date(
+    Year,
+    month - 1,
+    day,
+    hour,
+    minute,
+    second
+  ).getTime();
+
+  const logoutTime = employee.logs[employee.logs.length - 1].logouttime;
+  const [outtime, outdate] = logoutTime.split(" ");
+  const [outhour, outminute, outsecond] = outtime.split(":").map(Number);
+  const [outYear, outmonth, outday] = outdate.split("-").map(Number);
+  const outdateObject = new Date(
+    outYear,
+    outmonth - 1,
+    outday,
+    outhour,
+    outminute,
+    outsecond
+  ).getTime();
+
+  const activeTime = (outdateObject - dateObject) / 1000;
+  // console.log(dateObject);
+  // console.log(activeTime);
+
+  const halfdayTime = 1000 * 60 * 60 * 5;
+  console.log(activeTime < halfdayTime);
+  if (activeTime <= halfdayTime) {
+    if (
+      employee.attendance.halfdays[employee.attendance.halfdays.length - 1] !==
+      `${year}`
+    ) {
+      employee.attendance.halfdays.push(
+        `${currentyear}-${currentMonth + 1}-${currentDay}`
+      );
+    }
+  } else {
+    if (
+      employee.attendance.presents[employee.attendance.presents.length - 1] !==
+      `${currentyear}-${currentMonth + 1}-${currentDay}`
+    ) {
+      await employee.attendance.presents.push(
+        `${currentyear}-${currentMonth + 1}-${currentDay}`
+      );
+    }
+  }
+
   await employee.save();
   res.clearCookie("token");
   res.json({ message: "Successfully Singout!", employee });
