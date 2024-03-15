@@ -1,9 +1,10 @@
-const employeeModel = require("../models/employeeModel");
-const { catchAsyncErrors } = require("../middlewares/catchAsyncErrors");
-const ErrorHandler = require("../utils/ErrorHandler");
-const { SendToken } = require("../utils/SendToken");
-const incomeDetails = require("../models/incomeDetails");
-const { upload } = require("../middlewares/multer");
+const employeeModel = require("../models/employeeModel.js");
+const { catchAsyncErrors } = require("../middlewares/catchAsyncErrors.js");
+const ErrorHandler = require("../utils/ErrorHandler.js");
+const { SendToken } = require("../utils/SendToken.js");
+const incomeDetails = require("../models/incomeDetails.js");
+const { upload } = require("../middlewares/multer.js");
+const expensesModel = require("../models/expensesModel.js");
 
 exports.home = catchAsyncErrors(async (req, res) => {
   res.status(200).json({ message: "this is  Home Route" });
@@ -13,6 +14,7 @@ exports.currentEmployee = catchAsyncErrors(async (req, res) => {
   const employee = await employeeModel
     .findById(req.id)
     .populate("services")
+    .populate("expenses")
     .exec();
   res.json(employee);
 });
@@ -137,7 +139,7 @@ exports.signout = catchAsyncErrors(async (req, res, next) => {
 
   await employee.save();
   res.clearCookie("token");
-  res.json({ message: "Successfully Singout!", employee });
+  res.json({ message: "Successfully Singout!" });
 });
 
 exports.document = catchAsyncErrors(async (req, res, next) => {
@@ -165,5 +167,40 @@ exports.addincome = catchAsyncErrors(async (req, res, next) => {
 
   res.json({
     message: "submmit successfully",
+  });
+});
+
+exports.updateincome = catchAsyncErrors(async (req, res, next) => {
+  console.log(req.params.id);
+  const oneservice = await incomeDetails.findByIdAndUpdate(
+    req.params.id,
+    req.body
+  );
+  await oneservice.save();
+  res.status(200).json({ message: "Update Income Successfully" });
+});
+
+//Expense ---------------------
+
+exports.addexpense = catchAsyncErrors(async (req, res, next) => {
+  const employee = await employeeModel.findById(req.id);
+  const expense = await expensesModel(req.body).save();
+
+  employee.expenses.push(expense._id);
+  expense.employee = employee._id;
+  await employee.save();
+  await expense.save();
+
+  res.status(200).json({
+    message: "Expense add successfully!",
+  });
+});
+
+exports.updateexpense = catchAsyncErrors(async (req, res, next) => {
+  const update = await expensesModel.findByIdAndUpdate(req.params.id, req.body);
+  await update.save();
+  res.status(200).json({
+    message: "Expense Update Successfully!",
+    update,
   });
 });

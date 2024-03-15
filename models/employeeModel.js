@@ -4,7 +4,8 @@ const jwt = require("jsonwebtoken");
 
 const employeeModel = mongoose.Schema({
   services: [{ type: mongoose.Schema.Types.ObjectId, ref: "incomeDetails" }],
-  // attendance: [],
+  expenses: [{ type: mongoose.Schema.Types.ObjectId, ref: "expenseDetails" }],
+
   attendance: {
     presents: [{ type: String }],
     halfdays: [{ type: String }],
@@ -48,9 +49,11 @@ const employeeModel = mongoose.Schema({
     type: {},
   },
   role: {
+    require: true,
     type: String,
   },
   gander: {
+    require: true,
     type: String,
   },
   avatar: {
