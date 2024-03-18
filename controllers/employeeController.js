@@ -138,7 +138,7 @@ exports.signout = catchAsyncErrors(async (req, res, next) => {
 
   employee.islogin = false;
   await employee.save();
-  // res.clearCookie("token");
+  res.clearCookie("token");
   res.json({ message: "Successfully Singout!" });
 });
 
