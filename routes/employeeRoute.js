@@ -46,6 +46,6 @@ router.post("/updateincome/:id", isAuthenticated, updateincome);
 router.post("/addexpense", isAuthenticated, addexpense);
 
 //POST /api/employee/updateexpense
-router.post("/updateexpense/:id", updateexpense);
+router.post("/updateexpense/:id", isAuthenticated, updateexpense);
 
 module.exports = router;

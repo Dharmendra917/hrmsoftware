@@ -5,6 +5,7 @@ const { SendToken } = require("../utils/SendToken.js");
 const incomeDetails = require("../models/incomeDetails.js");
 const { upload } = require("../middlewares/multer.js");
 const expensesModel = require("../models/expensesModel.js");
+const { attendance } = require("../middlewares/attendance.js");
 
 exports.home = catchAsyncErrors(async (req, res) => {
   res.status(200).json({ message: "this is  Home Route" });
@@ -55,7 +56,8 @@ exports.signin = catchAsyncErrors(async (req, res, next) => {
     logouttime: null,
   };
 
-  employee.logs.push(logEntry);
+  await employee.logs.push(logEntry);
+  employee.islogin = true;
   await employee.save();
 
   SendToken(employee, 201, res);
@@ -84,7 +86,6 @@ exports.signout = catchAsyncErrors(async (req, res, next) => {
   } else {
     return next(new ErrorHandler("Employee not found or no login records"));
   }
-  console.log(latestLog);
   const loginTime = latestLog.logintime;
   const [time, date] = loginTime.split(" ");
   const [hour, minute, second] = time.split(":").map(Number);
@@ -112,8 +113,6 @@ exports.signout = catchAsyncErrors(async (req, res, next) => {
   ).getTime();
 
   const activeTime = (outdateObject - dateObject) / 1000;
-  // console.log(dateObject);
-  // console.log(activeTime);
 
   const halfdayTime = 1000 * 60 * 60 * 5;
   console.log(activeTime < halfdayTime);
@@ -137,8 +136,9 @@ exports.signout = catchAsyncErrors(async (req, res, next) => {
     }
   }
 
+  employee.islogin = false;
   await employee.save();
-  res.clearCookie("token");
+  // res.clearCookie("token");
   res.json({ message: "Successfully Singout!" });
 });
 
@@ -157,7 +157,7 @@ exports.document = catchAsyncErrors(async (req, res, next) => {
 // Service ------------
 exports.addincome = catchAsyncErrors(async (req, res, next) => {
   const data = req.body;
-  const employee = await employeeModel.findById(req.id);
+  const employee = await new employeeModel.findById(req.id);
   const service = await incomeDetails(data).save();
 
   employee.services.push(service._id);
@@ -166,7 +166,7 @@ exports.addincome = catchAsyncErrors(async (req, res, next) => {
   await service.save();
 
   res.json({
-    message: "submmit successfully",
+    message: "Income Add Successfully",
   });
 });
 
@@ -184,7 +184,7 @@ exports.updateincome = catchAsyncErrors(async (req, res, next) => {
 
 exports.addexpense = catchAsyncErrors(async (req, res, next) => {
   const employee = await employeeModel.findById(req.id);
-  const expense = await expensesModel(req.body).save();
+  const expense = await new expensesModel(req.body).save();
 
   employee.expenses.push(expense._id);
   expense.employee = employee._id;

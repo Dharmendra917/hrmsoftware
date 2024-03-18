@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 const employeeModel = mongoose.Schema({
   services: [{ type: mongoose.Schema.Types.ObjectId, ref: "incomeDetails" }],
   expenses: [{ type: mongoose.Schema.Types.ObjectId, ref: "expenseDetails" }],
-
+  tasks: [{ type: mongoose.Schema.Types.ObjectId, ref: "task" }],
   attendance: {
     presents: [{ type: String }],
     halfdays: [{ type: String }],
@@ -17,11 +17,6 @@ const employeeModel = mongoose.Schema({
     minLength: [6, "Name should be atleast 6 character "],
     require: [true, "Name is required"],
   },
-  // lastname: {
-  //   type: String,
-  //   minLength: [4, "Last Name should be atleast 4 character"],
-  //   require: [true, "Last Name is required"],
-  // },
   email: {
     unique: true,
     type: String,
@@ -72,6 +67,10 @@ const employeeModel = mongoose.Schema({
       },
     },
   ],
+  islogin: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 employeeModel.pre("save", function () {

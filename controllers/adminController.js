@@ -4,6 +4,7 @@ const { SendToken } = require("../utils/SendToken");
 
 const adminModel = require("../models/adminModel.js");
 const employeeModel = require("../models/employeeModel.js");
+const taskModel = require("../models/taskModel.js");
 
 exports.home = catchAsyncErrors((req, res) => {
   res.status(200).json({ message: "This is Admin Home Page" });
@@ -58,4 +59,17 @@ exports.oneemployee = catchAsyncErrors(async (req, res, next) => {
     .populate("services");
 
   res.status(200).json(employee);
+});
+
+exports.addtasks = catchAsyncErrors(async (req, res, next) => {
+  const employee = await employeeModel.findById(req.params.id);
+  const task = await new taskModel(req.body);
+  employee.tasks.push(task._id);
+  await employee.save();
+  await task.save();
+  res.status(200).json({
+    message: "Task Send Successfully!",
+    task,
+    employee,
+  });
 });

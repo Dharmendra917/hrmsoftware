@@ -7,6 +7,7 @@ const {
   allemployee,
   oneemployee,
   currentAdmin,
+  addtasks,
 } = require("../controllers/adminController.js");
 const { isAuthenticated } = require("../middlewares/auth.js");
 
@@ -32,5 +33,8 @@ router.get("/allemployee", isAuthenticated, allemployee);
 
 //GET /api/admin/oneEmployee
 router.get("/oneemployee/:id", isAuthenticated, oneemployee);
+
+//POST /api/admin/addtask
+router.post("/task/:id", isAuthenticated, addtasks);
 
 module.exports = router;
