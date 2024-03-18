@@ -157,8 +157,13 @@ exports.document = catchAsyncErrors(async (req, res, next) => {
 // Service ------------
 exports.addincome = catchAsyncErrors(async (req, res, next) => {
   const data = req.body;
-  const employee = await new employeeModel.findById(req.id);
-  const service = await incomeDetails(data).save();
+  const addDateAndTime = new Date().toLocaleString("en-IN", {
+    timeZone: "Asia/Kolkata",
+  });
+
+  data.addtime = addDateAndTime;
+  const employee = await employeeModel.findById(req.id);
+  const service = await new incomeDetails(data).save();
 
   employee.services.push(service._id);
   service.employee = employee._id;
@@ -171,11 +176,14 @@ exports.addincome = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.updateincome = catchAsyncErrors(async (req, res, next) => {
-  console.log(req.params.id);
+  const addDateAndTime = new Date().toLocaleString("en-IN", {
+    timeZone: "Asia/Kolkata",
+  });
   const oneservice = await incomeDetails.findByIdAndUpdate(
     req.params.id,
     req.body
   );
+  oneservice.updatetime = addDateAndTime;
   await oneservice.save();
   res.status(200).json({ message: "Update Income Successfully" });
 });
@@ -183,8 +191,13 @@ exports.updateincome = catchAsyncErrors(async (req, res, next) => {
 //Expense ---------------------
 
 exports.addexpense = catchAsyncErrors(async (req, res, next) => {
+  const data = req.body;
+  const addDateAndTime = new Date().toLocaleString("en-IN", {
+    timeZone: "Asia/Kolkata",
+  });
+  data.addtime = addDateAndTime;
   const employee = await employeeModel.findById(req.id);
-  const expense = await new expensesModel(req.body).save();
+  const expense = await new expensesModel(data).save();
 
   employee.expenses.push(expense._id);
   expense.employee = employee._id;
@@ -197,10 +210,14 @@ exports.addexpense = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.updateexpense = catchAsyncErrors(async (req, res, next) => {
+  const addDateAndTime = new Date().toLocaleString("en-IN", {
+    timeZone: "Asia/Kolkata",
+  });
+
   const update = await expensesModel.findByIdAndUpdate(req.params.id, req.body);
+  update.updatetime = addDateAndTime;
   await update.save();
   res.status(200).json({
     message: "Expense Update Successfully!",
-    update,
   });
 });

@@ -17,6 +17,12 @@ const incomeDetails = mongoose.Schema({
     type: String,
     require: [true, "please fill Status!"],
   },
+  addtime: {
+    type: String,
+  },
+  updatetime: {
+    type: String,
+  },
 });
 
 module.exports = mongoose.model("incomeDetails", incomeDetails);
