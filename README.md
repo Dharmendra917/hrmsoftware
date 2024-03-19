@@ -1,5 +1,27 @@
 ## Installation
 
+- #setup
+- #dependencies
+- **jsonwebtoken:** Module for generating and verifying JSON Web Tokens (JWT).
+
+For Node.js projects, install using npm:
+
+```sh
+npm install jsonwebtoke
+
+```
+
+- **dotenv:** Module for access .env file.
+
+For Node.js projects, install using npm:
+
+```sh
+npm install dotenv
+
+```
+
+- #configuration
+
 ## Features
 
 - #authentication
