@@ -34,7 +34,7 @@ router.get("/allemployee", isAuthenticated, allemployee);
 //GET /api/admin/oneEmployee
 router.get("/oneemployee/:id", isAuthenticated, oneemployee);
 
-//POST /api/admin/addtask
+//POST /api/admin/addTask
 router.post("/task/:id", isAuthenticated, addtasks);
 
 module.exports = router;

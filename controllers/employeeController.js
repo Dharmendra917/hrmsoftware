@@ -6,6 +6,7 @@ const incomeDetails = require("../models/incomeDetails.js");
 const { upload } = require("../middlewares/multer.js");
 const expensesModel = require("../models/expensesModel.js");
 const { attendance } = require("../middlewares/attendance.js");
+const taskModel = require("../models/taskModel.js");
 
 exports.home = catchAsyncErrors(async (req, res) => {
   res.status(200).json({ message: "this is  Home Route" });
@@ -220,4 +221,14 @@ exports.updateexpense = catchAsyncErrors(async (req, res, next) => {
   res.status(200).json({
     message: "Expense Update Successfully!",
   });
+});
+
+//----------------
+exports.updatetasks = catchAsyncErrors(async (req, res, next) => {
+  const { status } = req.body;
+  const updateTasks = await taskModel.findByIdAndUpdate(req.params.id, {
+    status: status,
+  });
+  updateTasks.save();
+  res.status(201).json({ Message: "Taks Update Successfully!" });
 });

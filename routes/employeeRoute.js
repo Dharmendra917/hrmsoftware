@@ -10,6 +10,7 @@ const {
   addexpense,
   updateincome,
   updateexpense,
+  updatetasks,
 } = require("../controllers/employeeController");
 const { isAuthenticated } = require("../middlewares/auth");
 
@@ -47,5 +48,8 @@ router.post("/addexpense", isAuthenticated, addexpense);
 
 //POST /api/employee/updateexpense
 router.post("/updateexpense/:id", isAuthenticated, updateexpense);
+
+//POST /api/employee/updatetasks
+router.post("/updatetasks/:id", updatetasks);
 
 module.exports = router;

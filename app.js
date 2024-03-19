@@ -2,6 +2,11 @@ require("dotenv").config({ path: "./.env" });
 const express = require("express");
 const app = express();
 
+const http = require("http");
+const socketIo = require("socket.io");
+const server = http.createServer(app);
+const io = socketIo(server);
+
 //DataBase Connection
 require("./models/database.js").connectDatabase();
 

@@ -47,6 +47,7 @@ exports.signout = catchAsyncErrors(async (req, res, next) => {
   res.json({ message: "Successfully Singout!" });
 });
 
+//Employee
 exports.allemployee = catchAsyncErrors(async (req, res, next) => {
   const employees = await employeeModel.find().populate("services").exec();
 
@@ -61,6 +62,7 @@ exports.oneemployee = catchAsyncErrors(async (req, res, next) => {
   res.status(200).json(employee);
 });
 
+//Tasks
 exports.addtasks = catchAsyncErrors(async (req, res, next) => {
   const employee = await employeeModel.findById(req.params.id);
   const task = await new taskModel(req.body);
@@ -69,7 +71,5 @@ exports.addtasks = catchAsyncErrors(async (req, res, next) => {
   await task.save();
   res.status(200).json({
     message: "Task Send Successfully!",
-    task,
-    employee,
   });
 });

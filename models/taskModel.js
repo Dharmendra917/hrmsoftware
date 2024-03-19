@@ -11,6 +11,7 @@ const taskModel = mongoose.Schema({
   },
   status: {
     type: String,
+    default: "Pending",
   },
   startdate: {
     type: String,
