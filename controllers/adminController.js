@@ -16,12 +16,6 @@ exports.currentAdmin = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.signup = catchAsyncErrors(async (req, res, next) => {
-  data = {
-    name: "Sachin Pawar",
-    email: "sachinspindofficial@gmail.com",
-    password: "Sachin@2000",
-    contact: " 0123456789",
-  };
   const result = await new adminModel(req.body).save();
   res.status(200).json({ message: "SignUp Successfully!" });
 });
@@ -72,4 +66,32 @@ exports.addtasks = catchAsyncErrors(async (req, res, next) => {
   res.status(200).json({
     message: "Task Send Successfully!",
   });
+});
+
+//Leave Request
+exports.leaverequest = catchAsyncErrors(async (req, res, next) => {
+  const { leaverequest } = req.body;
+  const employee = await employeeModel.findById(req.params.id);
+  if (!employee) {
+    return next(new ErrorHandler("Employe Not Found", 500));
+  }
+  leaverequest.forEach((elm) => {
+    employee.attendance.leaves.push(elm);
+  });
+  await employee.save();
+  res.status(200).json({ message: "Leave Granted Successfully!" });
+});
+
+//Holidays
+exports.holidays = catchAsyncErrors(async (req, res, next) => {
+  const { holidays } = req.body;
+  const employee = await employeeModel.find();
+  employee.forEach((employeeElements) => {
+    holidays.forEach((holidaysElements) => {
+      employeeElements.attendance.holidays.push(holidaysElements);
+    });
+    employeeElements.save();
+  });
+  // await data.save();
+  res.status(200).json({ message: "this is holidays", employee });
 });

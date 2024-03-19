@@ -20,6 +20,42 @@ npm install dotenv
 
 ```
 
+- **cors:** CORS allows us to bypass this policy in case of scenarios where accessing third-party resources becomes necessary.
+
+For Node.js projects, install using npm:
+
+```sh
+npm install cors
+
+```
+
+- **bcryptjs:** This module enables storing passwords as hashed passwords instead of plaintext.
+
+For Node.js projects, install using npm:
+
+```sh
+npm install bcryptjs
+
+```
+
+- **cookie-parser:** Cookie parser is used to parse the cookies included in the request headers of an HTTP request
+
+For Node.js projects, install using npm:
+
+```sh
+npm install cookie-parser
+
+```
+
+- **express-session:** express-session is a middleware module in Express. js that allows you to create sessions in your web application. It stores session data on the server side, using a variety of different storage options, and allows you to track the activity of a user across requests.
+
+For Node.js projects, install using npm:
+
+```sh
+npm install express-session
+
+```
+
 - #configuration
 
 ## Features
