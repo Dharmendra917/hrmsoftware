@@ -108,3 +108,4 @@ _ // Admin------------------------------- _
 <p>GET /api/admin/allemployee</p>
 <p>GET /api/admin/oneemployee/:id</p>
 <p>POST /api/admin/task/:id</p>
+<p>POST /api/admin/holidays/</p>
