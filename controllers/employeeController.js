@@ -17,6 +17,7 @@ exports.currentEmployee = catchAsyncErrors(async (req, res) => {
     .findById(req.id)
     .populate("services")
     .populate("expenses")
+    .populate("tasks")
     .exec();
   res.json(employee);
 });

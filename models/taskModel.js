@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const taskModel = mongoose.Schema({
+  employee: { type: mongoose.Schema.Types.ObjectId, ref: "employee" },
   title: {
     type: String,
     require: [true, "Please Fill Title!"],

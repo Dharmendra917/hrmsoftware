@@ -110,3 +110,4 @@ _ // Admin------------------------------- _
 <p>POST /api/admin/task/:id</p>
 <p>POST /api/admin/holidays/</p>
 <p>POST /api/admin/leaverequest/:id</p>
+<p>GET  /api/admin/alltask </p>

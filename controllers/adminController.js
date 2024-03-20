@@ -61,11 +61,17 @@ exports.addtasks = catchAsyncErrors(async (req, res, next) => {
   const employee = await employeeModel.findById(req.params.id);
   const task = await new taskModel(req.body);
   employee.tasks.push(task._id);
+  task.employee = employee._id;
   await employee.save();
   await task.save();
   res.status(200).json({
     message: "Task Send Successfully!",
   });
+});
+
+exports.alltasks = catchAsyncErrors(async (req, res, next) => {
+  const tasks = await taskModel.find().populate("employee", "name avatar");
+  res.status(200).json({ tasks });
 });
 
 //Leave Request
@@ -92,6 +98,5 @@ exports.holidays = catchAsyncErrors(async (req, res, next) => {
     });
     employeeElements.save();
   });
-  // await data.save();
   res.status(200).json({ message: "this is holidays", employee });
 });

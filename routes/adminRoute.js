@@ -10,6 +10,7 @@ const {
   addtasks,
   leaverequest,
   holidays,
+  alltasks,
 } = require("../controllers/adminController.js");
 const { isAuthenticated } = require("../middlewares/auth.js");
 
@@ -38,6 +39,9 @@ router.get("/oneemployee/:id", isAuthenticated, oneemployee);
 
 //POST /api/admin/addTask
 router.post("/task/:id", isAuthenticated, addtasks);
+
+//GET /api/admin/alltasks
+router.get("/alltask", isAuthenticated, alltasks);
 
 //POST /api/admin/leaverequest
 router.post("/leaverequest/:id", isAuthenticated, leaverequest);
