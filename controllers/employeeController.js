@@ -149,15 +149,19 @@ exports.signout = catchAsyncErrors(async (req, res, next) => {
   res.json({ message: "Successfully Singout!" });
 });
 
-exports.document = catchAsyncErrors(async (req, res, next) => {
-  upload.single("document")(req, res, (err) => {
-    const file = req.file;
-
+exports.avatar = catchAsyncErrors(async (req, res, next) => {
+  upload.single("avatar")(req, res, async (err) => {
+    const { originalname, buffer } = req.file;
+    const employee = await employeeModel.findById(req.id);
     if (err) {
       return next(new ErrorHandler(err, 500));
     }
-
-    res.json({ message: "File uploaded successfully!", file });
+    employee.avatar = {
+      data: buffer,
+      filename: originalname,
+    };
+    await employee.save();
+    res.json({ message: "File uploaded successfully!" });
   });
 });
 

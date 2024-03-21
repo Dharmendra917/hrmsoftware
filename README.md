@@ -82,7 +82,7 @@ _ // Employess---------------------------- _
 <p>POST /api/employee/singin</p>
 <p>GET /api/employee/singout</p>
 <p>POST /api/employee/current</p>
-<p>GET /api/employee/document</p>
+<p>GET /api/employee//avatar/</p>
 
 _ // Tasks-------------------------------- _
 

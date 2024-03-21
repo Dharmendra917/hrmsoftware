@@ -6,7 +6,7 @@ const {
   signout,
   currentEmployee,
   addincome,
-  document,
+  avatar,
   addexpense,
   updateincome,
   updateexpense,
@@ -16,8 +16,8 @@ const { isAuthenticated } = require("../middlewares/auth");
 
 const router = express.Router();
 
-//GET /api/employee/document
-router.get("/document", document);
+//GET /api/employee/avatar
+router.get("/avatar/", isAuthenticated, avatar);
 
 //GET /api/employee
 router.get("/", home);
