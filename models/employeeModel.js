@@ -12,6 +12,9 @@ const employeeModel = mongoose.Schema({
     holidays: [{ type: String }],
     leaves: [{ type: String }],
   },
+  employeeid: {
+    type: String,
+  },
   name: {
     type: String,
     minLength: [6, "Name should be atleast 6 character "],

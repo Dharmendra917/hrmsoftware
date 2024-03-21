@@ -98,5 +98,5 @@ exports.holidays = catchAsyncErrors(async (req, res, next) => {
     });
     employeeElements.save();
   });
-  res.status(200).json({ message: "this is holidays", employee });
+  res.status(200).json({ message: "Monthly Holidays Added!" });
 });

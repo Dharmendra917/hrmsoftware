@@ -7,6 +7,7 @@ const { upload } = require("../middlewares/multer.js");
 const expensesModel = require("../models/expensesModel.js");
 const { attendance } = require("../middlewares/attendance.js");
 const taskModel = require("../models/taskModel.js");
+const { model } = require("mongoose");
 
 exports.home = catchAsyncErrors(async (req, res) => {
   res.status(200).json({ message: "this is  Home Route" });
@@ -23,7 +24,18 @@ exports.currentEmployee = catchAsyncErrors(async (req, res) => {
 });
 
 exports.signup = catchAsyncErrors(async (req, res, next) => {
+  const month = new Date().getMonth() + 1;
+  const paddedMonth = month < 10 ? "0" + month : month;
+  const day = new Date().getDate();
+  const paddedDay = day < 10 ? "0" + day : day;
+  const employeeid =
+    `${paddedDay}` +
+    `${paddedMonth}` +
+    process.env.EMPLOYEE_SECERET_ID +
+    Math.floor(Math.random() * 10000);
+
   const info = await new employeeModel(req.body);
+  info.employeeid = employeeid;
   info.save();
 
   res.status(201).json({ message: "Create successfully", info });
@@ -34,34 +46,27 @@ exports.signin = catchAsyncErrors(async (req, res, next) => {
     .findOne({ email: req.body.email })
     .select("+password")
     .exec();
-
   if (!employee) {
     return next(new ErrorHandler("Employee Not Found ", 500));
   }
-
   const isMatch = employee.comparepassword(req.body.password);
   if (!isMatch) return next(new ErrorHandler("Wrong Password", 500));
-
   const currentDate = new Date();
   const currentyear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth();
   const currentDay = currentDate.getDate();
   const year = `${currentyear}-${currentMonth + 1}-${currentDay}`;
-
   const currentHour = currentDate.getHours();
   const currentMinute = currentDate.getMinutes();
   const currentSecond = currentDate.getSeconds();
   const time = `${currentHour}:${currentMinute}:${currentSecond}`;
-
   const logEntry = {
     logintime: `${time} ${year}`,
     logouttime: null,
   };
-
   await employee.logs.push(logEntry);
   employee.islogin = true;
   await employee.save();
-
   SendToken(employee, 201, res);
 });
 
@@ -231,5 +236,5 @@ exports.updatetasks = catchAsyncErrors(async (req, res, next) => {
     status: status,
   });
   updateTasks.save();
-  res.status(201).json({ Message: "Taks Update Successfully!" });
+  res.status(201).json({ message: "Taks Update Successfully!" });
 });
