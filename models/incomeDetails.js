@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 
 const incomeDetails = mongoose.Schema({
   employee: { type: mongoose.Schema.Types.ObjectId, ref: "employee" },
+  offlinecustomer: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "offlinecustomer",
+  },
   title: {
     type: String,
   },

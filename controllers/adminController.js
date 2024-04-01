@@ -5,6 +5,8 @@ const { SendToken } = require("../utils/SendToken");
 const adminModel = require("../models/adminModel.js");
 const employeeModel = require("../models/employeeModel.js");
 const taskModel = require("../models/taskModel.js");
+const incomeDetails = require("../models/incomeDetails.js");
+const offlineCustomerModel = require("../models/offlineCustomerModel.js");
 
 exports.home = catchAsyncErrors((req, res) => {
   res.status(200).json({ message: "This is Admin Home Page" });
@@ -41,13 +43,14 @@ exports.signout = catchAsyncErrors(async (req, res, next) => {
   res.json({ message: "Successfully Singout!" });
 });
 
-//Employee
+//Employees
 exports.allemployee = catchAsyncErrors(async (req, res, next) => {
   const employees = await employeeModel.find().populate("services").exec();
 
   res.status(200).json(employees);
 });
 
+//oneEmployees
 exports.oneemployee = catchAsyncErrors(async (req, res, next) => {
   const employee = await employeeModel
     .findById(req.params.id)
@@ -69,6 +72,7 @@ exports.addtasks = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
+//allTasks
 exports.alltasks = catchAsyncErrors(async (req, res, next) => {
   const tasks = await taskModel.find().populate("employee", "name avatar");
   res.status(200).json({ tasks });
@@ -99,4 +103,36 @@ exports.holidays = catchAsyncErrors(async (req, res, next) => {
     employeeElements.save();
   });
   res.status(200).json({ message: "Monthly Holidays Added!" });
+});
+
+//offlineCustomers
+
+//allofflineCustomers
+exports.allofflinecustomers = catchAsyncErrors(async (req, res, next) => {
+  const allcutomers = await offlineCustomerModel.find().exec();
+  res.status(200).json({ allcutomers });
+});
+
+//oneofflineCustomer
+exports.oneofflinecustomer = catchAsyncErrors(async (req, res, next) => {
+  const onecustomer = await offlineCustomerModel
+    .findById(req.params.id)
+    .populate({
+      path: "buyproducts",
+      select: "-offlinecustomer",
+      populate: { path: "employee", select: "name email employeeid avatar" },
+    })
+    .exec();
+  res.status(200).json({ onecustomer });
+});
+
+//incomes----
+exports.incomes = catchAsyncErrors(async (req, res, next) => {
+  const allincome = await incomeDetails
+    .find()
+    .populate("offlinecustomer", "name contact email")
+    .populate("employee", "name avatar email employeeid");
+  res.status(200).json({
+    allincome,
+  });
 });

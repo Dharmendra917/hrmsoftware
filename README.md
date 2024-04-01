@@ -82,7 +82,8 @@ _ // Employess---------------------------- _
 <p>POST /api/employee/singin</p>
 <p>GET /api/employee/singout</p>
 <p>POST /api/employee/current</p>
-<p>GET /api/employee//avatar/</p>
+<p>GET /api/employee/avatar/</p>
+<p>GET /api/employee/sendmail</p>
 
 _ // Tasks-------------------------------- _
 
@@ -111,3 +112,16 @@ _ // Admin------------------------------- _
 <p>POST /api/admin/holidays/</p>
 <p>POST /api/admin/leaverequest/:id</p>
 <p>GET  /api/admin/alltask </p>
+
+<p>-----offlinecustomer</P>
+ 
+<p>POST /api/admin/incomes</p>
+<p>GET /api/admin/allofflinecustomers</p>
+<p>GET /api/admin/oneofflinecustomer/:id</p>
+
+_ // OfflineCustomer------------------------------- _
+
+<p>POST /api/offlinecustomer/registration </p>
+<p>POST /api/offlinecustomer/signin </p>
+<p>GET /api/offlinecustomer/signout </p>
+<p>POST /api/offlinecustomer/current </p>

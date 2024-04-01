@@ -36,7 +36,6 @@ const employeeModel = mongoose.Schema({
   },
   password: {
     type: String,
-    require: [true, "Password is required"],
     select: false,
   },
   document: {
@@ -75,6 +74,10 @@ const employeeModel = mongoose.Schema({
   islogin: {
     type: Boolean,
     default: false,
+  },
+  resetpasswordtoken: {
+    type: Number,
+    default: 0,
   },
 });
 

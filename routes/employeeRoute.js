@@ -11,6 +11,8 @@ const {
   updateincome,
   updateexpense,
   updatetasks,
+  employeesendmail,
+  employeeforgotopt,
 } = require("../controllers/employeeController");
 const { isAuthenticated } = require("../middlewares/auth");
 
@@ -34,6 +36,11 @@ router.post("/signin", signin);
 //GET /api/employee/signout
 router.get("/signout", isAuthenticated, signout);
 
+//GET /api/employee/sendmail
+router.get("/sendmail", employeesendmail);
+
+//GET /api/employee/forgotpassword
+router.get("/forgotpassword", employeeforgotopt);
 // Service---------------------
 //POST /api/employee/service
 router.post("/addincome", isAuthenticated, addincome);

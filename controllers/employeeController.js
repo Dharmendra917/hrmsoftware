@@ -8,6 +8,8 @@ const expensesModel = require("../models/expensesModel.js");
 const { attendance } = require("../middlewares/attendance.js");
 const taskModel = require("../models/taskModel.js");
 const { model } = require("mongoose");
+const offlineCustomerModel = require("../models/offlineCustomerModel.js");
+const { sendmailer } = require("../utils/NodeMailer.js");
 
 exports.home = catchAsyncErrors(async (req, res) => {
   res.status(200).json({ message: "this is  Home Route" });
@@ -34,6 +36,15 @@ exports.signup = catchAsyncErrors(async (req, res, next) => {
     process.env.EMPLOYEE_SECERET_ID +
     Math.floor(Math.random() * 10000);
 
+  const find = await employeeModel.findOne({ email: req.body.email });
+  if (find) {
+    return next(
+      new ErrorHandler(
+        "Employee already exist! Please use another email address",
+        500
+      )
+    );
+  }
   const info = await new employeeModel(req.body);
   info.employeeid = employeeid;
   info.save();
@@ -165,6 +176,34 @@ exports.avatar = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
+exports.employeesendmail = catchAsyncErrors(async (req, res, next) => {
+  const employee = await employeeModel.findOne({ email: req.body.email });
+
+  if (!employee) {
+    return next(new ErrorHandler("Employee Not Found With This Email"));
+  }
+  const otp = Math.floor(Math.random() * 9000 + 1000);
+  sendmailer(req, res, next, otp);
+  employee.resetpasswordtoken = otp;
+  await employee.save();
+  setTimeout(() => {
+    employee.resetpasswordtoken = 0;
+    employee.save();
+  }, 60 * 1000 * 10);
+});
+
+exports.employeeforgotopt = catchAsyncErrors(async (req, res, next) => {
+  const employee = await employeeModel.findOne({ email: req.body.email });
+  if (!employee) {
+    return next(new ErrorHandler("Employee Not Found!"));
+  }
+  if (!req.body.otp === employee.resetpasswordtoken) {
+    return next(new ErrorHandler("Invalid OTP"));
+  }
+
+  res.json({ message: "Password Change Successfully!" });
+});
+
 // Service ------------
 exports.addincome = catchAsyncErrors(async (req, res, next) => {
   const data = req.body;
@@ -174,10 +213,17 @@ exports.addincome = catchAsyncErrors(async (req, res, next) => {
 
   data.addtime = addDateAndTime;
   const employee = await employeeModel.findById(req.id);
+  const offlinecustomer = await offlineCustomerModel.findOne({
+    contact: req.body.contact,
+  });
   const service = await new incomeDetails(data).save();
-
   employee.services.push(service._id);
   service.employee = employee._id;
+
+  offlinecustomer.buyproducts.push(service._id);
+  service.offlinecustomer = offlinecustomer._id;
+  await offlinecustomer.save();
+
   await employee.save();
   await service.save();
 

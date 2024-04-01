@@ -11,6 +11,9 @@ const {
   leaverequest,
   holidays,
   alltasks,
+  incomes,
+  allofflinecustomers,
+  oneofflinecustomer,
 } = require("../controllers/adminController.js");
 const { isAuthenticated } = require("../middlewares/auth.js");
 
@@ -48,5 +51,14 @@ router.post("/leaverequest/:id", isAuthenticated, leaverequest);
 
 //POST /api/admin/holidays
 router.post("/holidays/", isAuthenticated, holidays);
+
+//GET /api/admin/allofflinecustomers
+router.get("/allofflinecustomers", isAuthenticated, allofflinecustomers);
+
+//GET /api/admin/oneofflinecustomer/:id
+router.get("/oneofflinecustomer/:id", isAuthenticated, oneofflinecustomer);
+
+//POST /api/admin/incomes
+router.post("/incomes/", isAuthenticated, incomes);
 
 module.exports = router;
