@@ -5,6 +5,8 @@ const {
   signin,
   signout,
   current,
+  employeesendmail,
+  offlinecustomerforgotpassword,
 } = require("../controllers/offlineCustomerControler");
 const { isAuthenticated } = require("../middlewares/auth");
 const router = express.Router();
@@ -23,5 +25,11 @@ router.get("/signout", isAuthenticated, signout);
 
 //POST /current
 router.post("/current", isAuthenticated, current);
+
+//POST /send-mail
+router.post("/send-mail", employeesendmail);
+
+//POST /forgot-password
+router.post("/forgot-password", offlinecustomerforgotpassword);
 
 module.exports = router;

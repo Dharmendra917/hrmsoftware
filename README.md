@@ -128,3 +128,6 @@ _ // OfflineCustomer------------------------------- _
 <p>POST /api/offlinecustomer/signin </p>        -- 29 March
 <p>GET /api/offlinecustomer/signout </p>        -- 29 March
 <p>POST /api/offlinecustomer/current </p>       -- 29 March
+
+<p>POST /api/offlinecustomer/send-mail </p>          -- 1 April
+<p>POST /api/offlinecustomer/forgot-password </p>    -- 1 April

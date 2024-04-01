@@ -41,6 +41,10 @@ const offlineCustomerModel = mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  resetpasswordtoken: {
+    type: String,
+    default: "0",
+  },
 });
 
 offlineCustomerModel.pre("save", function () {

@@ -20,17 +20,13 @@ exports.currentEmployee = catchAsyncErrors(async (req, res) => {
     .findById(req.id)
     .populate({
       path: "services",
-      populate: {
-        path: "offlinecustomer",
-        select: "contact name",
-      },
-    })
-    .populate({
-      path: "services",
-      populate: {
-        path: "employee",
-        select: "name email",
-      },
+      populate: [
+        {
+          path: "offlinecustomer",
+          select: "contact name",
+        },
+        { path: "employee", select: "name email" },
+      ],
     })
     .populate("expenses")
     .populate("tasks")
