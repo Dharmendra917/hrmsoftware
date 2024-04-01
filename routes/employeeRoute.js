@@ -36,11 +36,12 @@ router.post("/signin", signin);
 //GET /api/employee/signout
 router.get("/signout", isAuthenticated, signout);
 
-//GET /api/employee/sendmail
-router.get("/sendmail", employeesendmail);
+//POST /api/employee/send-mail
+router.post("/send-mail", employeesendmail);
 
-//GET /api/employee/forgotpassword
-router.get("/forgotpassword", employeeforgotopt);
+//POST /api/employee/forgot-password
+router.post("/forgot-password", employeeforgotopt);
+
 // Service---------------------
 //POST /api/employee/service
 router.post("/addincome", isAuthenticated, addincome);

@@ -14,6 +14,8 @@ const {
   incomes,
   allofflinecustomers,
   oneofflinecustomer,
+  sendmail,
+  adminforgotpasswordotp,
 } = require("../controllers/adminController.js");
 const { isAuthenticated } = require("../middlewares/auth.js");
 
@@ -33,6 +35,12 @@ router.post("/signin", signin);
 
 //GET /api/admin/signout
 router.get("/signout", isAuthenticated, signout);
+
+//POST /api/admin/send-mail
+router.post("/send-mail", sendmail);
+
+//POST /api/admin/forgot-password
+router.post("/forgot-password", adminforgotpasswordotp);
 
 //GET /api/admin/
 router.get("/allemployee", isAuthenticated, allemployee);

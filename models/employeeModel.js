@@ -76,8 +76,8 @@ const employeeModel = mongoose.Schema({
     default: false,
   },
   resetpasswordtoken: {
-    type: Number,
-    default: 0,
+    type: String,
+    default: "0",
   },
 });
 

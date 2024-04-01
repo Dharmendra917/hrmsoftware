@@ -7,6 +7,7 @@ const employeeModel = require("../models/employeeModel.js");
 const taskModel = require("../models/taskModel.js");
 const incomeDetails = require("../models/incomeDetails.js");
 const offlineCustomerModel = require("../models/offlineCustomerModel.js");
+const { sendmailer } = require("../utils/NodeMailer.js");
 
 exports.home = catchAsyncErrors((req, res) => {
   res.status(200).json({ message: "This is Admin Home Page" });
@@ -41,6 +42,42 @@ exports.signin = catchAsyncErrors(async (req, res, next) => {
 exports.signout = catchAsyncErrors(async (req, res, next) => {
   res.clearCookie("token");
   res.json({ message: "Successfully Singout!" });
+});
+
+exports.sendmail = catchAsyncErrors(async (req, res, next) => {
+  const admin = await adminModel.findOne({ email: req.body.email });
+  if (!admin) {
+    return next(
+      new ErrorHandler("Admin Not Found! Please Cheack Your Email ", 500)
+    );
+  }
+
+  const otp = Math.floor(Math.random() * 9000 + 1000);
+  sendmailer(req, res, next, otp);
+  admin.resetpasswordtoken = otp;
+  await admin.save();
+  setTimeout(() => {
+    admin.resetpasswordtoken = 0;
+    admin.save();
+  }, 60 * 1000 * 10);
+});
+
+exports.adminforgotpasswordotp = catchAsyncErrors(async (req, res, next) => {
+  const admin = await adminModel.findOne({ email: req.body.email });
+
+  if (!admin) {
+    return next(new ErrorHandler("Admin Not Found!"));
+  }
+
+  if (admin.resetpasswordtoken === req.body.otp) {
+    admin.password = req.body.password;
+    admin.resetpasswordtoken = "0";
+    await admin.save();
+  } else {
+    return next(new ErrorHandler("Invalid OTP! Please Try Again."));
+  }
+
+  res.json({ message: "Password Change Successfully!" });
 });
 
 //Employees

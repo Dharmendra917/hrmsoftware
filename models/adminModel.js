@@ -34,6 +34,10 @@ const adminModel = mongoose.Schema({
       url: "https://toppng.com/uploads/preview/donna-picarro-dummy-avatar-115633298255iautrofxa.png",
     },
   },
+  resetpasswordtoken: {
+    type: String,
+    default: "0",
+  },
 });
 
 adminModel.pre("save", function () {

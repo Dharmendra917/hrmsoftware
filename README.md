@@ -83,7 +83,8 @@ _ // Employess---------------------------- _
 <p>GET /api/employee/singout</p>
 <p>POST /api/employee/current</p>
 <p>GET /api/employee/avatar/</p>
-<p>GET /api/employee/sendmail</p>
+<p>POST /api/employee/send-mail</p>         -- 1 April
+<p>POST /api/employee/forgot-password </p>  -- 1 April
 
 _ // Tasks-------------------------------- _
 
@@ -105,6 +106,8 @@ _ // Admin------------------------------- _
 <p>POST /api/admin/signin</p>
 <p>GET /api/admin/signout</p>
 <p>POST /api/admin/current</p>
+<p>POST /api/admin/send-mail </p>        -- 1 April
+<p>POST /api/admin/forgot-password </p>  -- 1 April
 
 <p>GET /api/admin/allemployee</p>
 <p>GET /api/admin/oneemployee/:id</p>
@@ -115,13 +118,13 @@ _ // Admin------------------------------- _
 
 <p>-----offlinecustomer</P>
  
-<p>POST /api/admin/incomes</p>
-<p>GET /api/admin/allofflinecustomers</p>
-<p>GET /api/admin/oneofflinecustomer/:id</p>
+<p>POST /api/admin/incomes</p>               -- 29 March
+<p>GET /api/admin/allofflinecustomers</p>    -- 29 March
+<p>GET /api/admin/oneofflinecustomer/:id</p> -- 29 March
 
 _ // OfflineCustomer------------------------------- _
 
-<p>POST /api/offlinecustomer/registration </p>
-<p>POST /api/offlinecustomer/signin </p>
-<p>GET /api/offlinecustomer/signout </p>
-<p>POST /api/offlinecustomer/current </p>
+<p>POST /api/offlinecustomer/registration </p>  -- 29 March
+<p>POST /api/offlinecustomer/signin </p>        -- 29 March
+<p>GET /api/offlinecustomer/signout </p>        -- 29 March
+<p>POST /api/offlinecustomer/current </p>       -- 29 March

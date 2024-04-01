@@ -18,7 +18,20 @@ exports.home = catchAsyncErrors(async (req, res) => {
 exports.currentEmployee = catchAsyncErrors(async (req, res) => {
   const employee = await employeeModel
     .findById(req.id)
-    .populate("services")
+    .populate({
+      path: "services",
+      populate: {
+        path: "offlinecustomer",
+        select: "contact name",
+      },
+    })
+    .populate({
+      path: "services",
+      populate: {
+        path: "employee",
+        select: "name email",
+      },
+    })
     .populate("expenses")
     .populate("tasks")
     .exec();
@@ -187,7 +200,7 @@ exports.employeesendmail = catchAsyncErrors(async (req, res, next) => {
   employee.resetpasswordtoken = otp;
   await employee.save();
   setTimeout(() => {
-    employee.resetpasswordtoken = 0;
+    employee.resetpasswordtoken = "0";
     employee.save();
   }, 60 * 1000 * 10);
 });
@@ -197,8 +210,13 @@ exports.employeeforgotopt = catchAsyncErrors(async (req, res, next) => {
   if (!employee) {
     return next(new ErrorHandler("Employee Not Found!"));
   }
-  if (!req.body.otp === employee.resetpasswordtoken) {
-    return next(new ErrorHandler("Invalid OTP"));
+
+  if (employee.resetpasswordtoken === req.body.otp) {
+    employee.password = req.body.password;
+    employee.resetpasswordtoken = "0";
+    await employee.save();
+  } else {
+    return next(new ErrorHandler("Invalid OTP! Please Try Again."));
   }
 
   res.json({ message: "Password Change Successfully!" });
