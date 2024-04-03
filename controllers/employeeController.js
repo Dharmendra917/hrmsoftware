@@ -80,13 +80,13 @@ exports.signin = catchAsyncErrors(async (req, res, next) => {
   const currentMinute = currentDate.getMinutes();
   const currentSecond = currentDate.getSeconds();
   const time = `${currentHour}:${currentMinute}:${currentSecond}`;
-  // const logEntry = {
-  //   logintime: `${time} ${year}`,
-  //   logouttime: null,
-  // };
-  // await employee.logs.push(logEntry);
-  // employee.islogin = true;
-  // await employee.save();
+  const logEntry = {
+    logintime: `${time} ${year}`,
+    logouttime: null,
+  };
+  await employee.logs.push(logEntry);
+  employee.islogin = true;
+  await employee.save();
   const loginActivity = {
     name: employee.name,
     email: employee.email,
@@ -96,8 +96,7 @@ exports.signin = catchAsyncErrors(async (req, res, next) => {
   };
   const otp = null;
   sendmailer(req, res, next, otp, loginActivity);
-  res.json({ message: ";lfgk" });
-  // SendToken(employee, 201, res);
+  SendToken(employee, 201, res);
 });
 
 exports.signout = catchAsyncErrors(async (req, res, next) => {
