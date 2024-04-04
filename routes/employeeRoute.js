@@ -47,7 +47,7 @@ router.post("/forgot-password", employeeforgotopt);
 router.post("/addincome", isAuthenticated, addincome);
 
 //POST /api/employee/updateincome
-router.post("/updateincome/:id", isAuthenticated, updateincome);
+router.post("/updateincome/:id/", isAuthenticated, updateincome);
 
 // Expense--------------------
 

@@ -69,8 +69,8 @@ exports.signin = catchAsyncErrors(async (req, res, next) => {
   if (!employee) {
     return next(new ErrorHandler("Employee Not Found ", 500));
   }
-  // const isMatch = employee.comparepassword(req.body.password);
-  // if (!isMatch) return next(new ErrorHandler("Wrong Password", 500));
+  const isMatch = employee.comparepassword(req.body.password);
+  if (!isMatch) return next(new ErrorHandler("Wrong Password", 500));
   const currentDate = new Date();
   const currentyear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth();
@@ -259,13 +259,35 @@ exports.updateincome = catchAsyncErrors(async (req, res, next) => {
   const addDateAndTime = new Date().toLocaleString("en-IN", {
     timeZone: "Asia/Kolkata",
   });
-  const oneservice = await incomeDetails.findByIdAndUpdate(
-    req.params.id,
-    req.body
-  );
-  oneservice.updatetime = addDateAndTime;
-  await oneservice.save();
-  res.status(200).json({ message: "Update Income Successfully" });
+  const { id } = req.params;
+  const { status, productsids } = req.body;
+
+  const income = await incomeDetails.findById(id);
+
+  if (!income) {
+    return next(new ErrorHandler("Income Not Found!", 500));
+  }
+
+  income.status = status;
+  let product;
+  let productNotFound = false;
+  productsids.forEach((elm) => {
+    product = income.products.id(elm.id);
+    if (!product) {
+      productNotFound = true;
+      return;
+    }
+    if (product) {
+      product.quantity = elm.quantity;
+    }
+  });
+  if (productNotFound) {
+    return next(new ErrorHandler("Product Not Found!", 500));
+  }
+  income.updatetime = addDateAndTime;
+  await income.save();
+
+  res.status(200).json({ message: "Update Income Successfully", income });
 });
 
 //Expense ---------------------
