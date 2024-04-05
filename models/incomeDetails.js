@@ -34,6 +34,7 @@ const incomeDetailsSchema = mongoose.Schema({
   },
   status: {
     type: String,
+    required: [true, "Please Select Status!"],
   },
   totalAmount: {
     type: Number,

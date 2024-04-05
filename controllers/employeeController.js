@@ -230,6 +230,10 @@ exports.employeeforgotopt = catchAsyncErrors(async (req, res, next) => {
 // Service ------------
 exports.addincome = catchAsyncErrors(async (req, res, next) => {
   const data = req.body;
+  const { contact } = req.body;
+  if (!contact) {
+    return next(new ErrorHandler("Fill Customer Contact!"));
+  }
   const addDateAndTime = new Date().toLocaleString("en-IN", {
     timeZone: "Asia/Kolkata",
   });
@@ -239,6 +243,13 @@ exports.addincome = catchAsyncErrors(async (req, res, next) => {
   const offlinecustomer = await offlineCustomerModel.findOne({
     contact: req.body.contact,
   });
+  if (!offlinecustomer) {
+    return next(
+      new ErrorHandler(
+        "Customer Not Found With This Number! Please Check Number"
+      )
+    );
+  }
   const service = await new incomeDetails(data).save();
   employee.services.push(service._id);
   service.employee = employee._id;
