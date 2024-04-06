@@ -243,7 +243,7 @@ exports.addincome = catchAsyncErrors(async (req, res, next) => {
 
   const day = dateObj.getDate();
   const month = dateObj.getMonth() + 1;
-  const year = dateObj.getFullYear();
+  const year = dateObj.getYear();
   data.addtime = addDateAndTime;
 
   data.invoicenumber = `${day}${month}${year}${counter}${Math.floor(

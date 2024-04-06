@@ -27,7 +27,6 @@ exports.sendmailer = (req, res, next, otp, loginActivity) => {
     const options = {
       from: "RS Online Private Limited <dp903604@gmail.com>",
       to: "dharmendrapatel0200@gmail.com",
-      // to: req.body.email,
       subject: "Employee Login Location",
       html: htmlTemplate,
     };
