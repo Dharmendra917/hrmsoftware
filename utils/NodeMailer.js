@@ -21,7 +21,7 @@ exports.sendmailer = (req, res, next, otp, loginActivity) => {
     <h4>Email: ${loginActivity.email}</h4>
     <h4>Id: ${loginActivity.employeeid}</h4>
     <h4>Date: ${loginActivity.logintime.time}, ${loginActivity.logintime.year}</h4>
-    <img src="https://www.google.com/maps/place/23%C2%B019'4.1%22N+78%C2%B05'6.1%22E/@23.317819161822136,78.08501840028043,21z/data=!4m4!3m3!8m2!3d23.317819161822136!4d78.08501840028043?entry=ttu" alt="Location Map">
+    <img src="${loginActivity.locationurl}" alt="Location Map">
   </div>
 `;
     const options = {

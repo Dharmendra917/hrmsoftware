@@ -1,3 +1,4 @@
+const { populate } = require("dotenv");
 const { catchAsyncErrors } = require("../middlewares/catchAsyncErrors");
 const offlineCustomerModel = require("../models/offlineCustomerModel");
 const ErrorHandler = require("../utils/ErrorHandler");
@@ -61,7 +62,12 @@ exports.signout = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.current = catchAsyncErrors(async (req, res, next) => {
-  const current = await offlineCustomerModel.findById(req.id);
+  const current = await offlineCustomerModel
+    .findById(req.id)
+    .populate({
+      path: "buyproducts",
+      populate: [{ path: "employee", select: "name email" }],
+    });
   res.status(200).json(current);
 });
 

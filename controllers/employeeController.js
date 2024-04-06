@@ -228,17 +228,28 @@ exports.employeeforgotopt = catchAsyncErrors(async (req, res, next) => {
 });
 
 // Service ------------
+let counter = 1;
 exports.addincome = catchAsyncErrors(async (req, res, next) => {
   const data = req.body;
-  const { contact } = req.body;
+  const { contact, products } = req.body;
+
   if (!contact) {
     return next(new ErrorHandler("Fill Customer Contact!"));
   }
   const addDateAndTime = new Date().toLocaleString("en-IN", {
     timeZone: "Asia/Kolkata",
   });
+  const dateObj = new Date(addDateAndTime);
 
+  const day = dateObj.getDate();
+  const month = dateObj.getMonth() + 1;
+  const year = dateObj.getFullYear();
   data.addtime = addDateAndTime;
+
+  data.invoicenumber = `${day}${month}${year}${counter}${Math.floor(
+    Math.random() * 10000
+  )}`;
+  counter++;
   const employee = await employeeModel.findById(req.id);
   const offlinecustomer = await offlineCustomerModel.findOne({
     contact: req.body.contact,

@@ -32,6 +32,13 @@ exports.generatedErrors = (err, req, res, next) => {
     err.message = "Contact must not exceed 10 character";
   }
 
+  if (
+    err.name === "ValidationError" &&
+    err.message.includes("Please provide at least one product")
+  ) {
+    err.message = "Please provide at least one product";
+  }
+
   res.status(statusCode).json({
     message: err.message,
     errName: err.name,

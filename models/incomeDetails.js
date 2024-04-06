@@ -25,7 +25,10 @@ const incomeDetailsSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "offlinecustomer",
   },
-  products: [productSchema],
+  products: {
+    type: [productSchema],
+    validate: [arrayMinSize, "Please provide at least one product"],
+  },
   addtime: {
     type: String,
   },
@@ -40,7 +43,14 @@ const incomeDetailsSchema = mongoose.Schema({
     type: Number,
     default: 0, // Default value is set to 0
   },
+  invoicenumber: {
+    type: Number,
+  },
 });
+
+function arrayMinSize(val) {
+  return val.length > 0;
+}
 
 incomeDetailsSchema.pre("save", function (next) {
   let total = 0;
