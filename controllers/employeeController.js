@@ -10,6 +10,7 @@ const taskModel = require("../models/taskModel.js");
 const { model } = require("mongoose");
 const offlineCustomerModel = require("../models/offlineCustomerModel.js");
 const { sendmailer } = require("../utils/NodeMailer.js");
+const { dateAndTime } = require("../middlewares/dateAndTime.js");
 
 exports.home = catchAsyncErrors(async (req, res) => {
   res.status(200).json({ message: "this is  Home Route" });
@@ -96,7 +97,7 @@ exports.signin = catchAsyncErrors(async (req, res, next) => {
     locationurl: req.body.locationurl,
   };
   const otp = null;
-  // sendmailer(req, res, next, otp, loginActivity);
+  sendmailer(req, res, next, otp, loginActivity);
   attendance(employee._id);
   SendToken(employee, 201, res);
 });
@@ -153,7 +154,6 @@ exports.signout = catchAsyncErrors(async (req, res, next) => {
   const activeTime = (outdateObject - dateObject) / 1000;
 
   const halfdayTime = 1000 * 60 * 60 * 5;
-  console.log(activeTime < halfdayTime);
   if (activeTime <= halfdayTime) {
     if (
       employee.attendance.halfdays[employee.attendance.halfdays.length - 1] !==
@@ -247,7 +247,11 @@ exports.addincome = catchAsyncErrors(async (req, res, next) => {
   const day = dateObj.getDate();
   const month = dateObj.getMonth() + 1;
   const year = dateObj.getYear();
-  data.addtime = addDateAndTime;
+  const fullyear = dateObj.getFullYear();
+  const hour = dateObj.getHours();
+  const minute = dateObj.getMinutes();
+  const seconds = dateObj.getSeconds();
+  data.addtime = `${fullyear}-${month}-${day} ${hour}:${minute}:${seconds}`;
 
   data.invoicenumber = `${day}${month}${year}${counter}${Math.floor(
     Math.random() * 10000
@@ -277,13 +281,20 @@ exports.addincome = catchAsyncErrors(async (req, res, next) => {
 
   res.json({
     message: "Income Add Successfully",
+    data,
   });
 });
 
 exports.updateincome = catchAsyncErrors(async (req, res, next) => {
-  const addDateAndTime = new Date().toLocaleString("en-IN", {
-    timeZone: "Asia/Kolkata",
-  });
+  const {
+    currentyear,
+    currentMonth,
+    currentDay,
+    currentHour,
+    currentMinute,
+    currentSecond,
+  } = dateAndTime();
+
   const { id } = req.params;
   const { status, productsids } = req.body;
 
@@ -311,10 +322,10 @@ exports.updateincome = catchAsyncErrors(async (req, res, next) => {
   if (productNotFound) {
     return next(new ErrorHandler("Product Not Found!", 500));
   }
-  income.updatetime = addDateAndTime;
+  income.updatetime = `${currentyear}-${currentMonth}-${currentDay} ${currentHour}:${currentMinute}:${currentSecond}`;
   await income.save();
 
-  res.status(200).json({ message: "Update Income Successfully", income });
+  res.status(200).json({ message: "Update Income Successfully" });
 });
 
 //Expense ---------------------

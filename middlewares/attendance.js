@@ -37,7 +37,6 @@ exports.attendance = catchAsyncErrors(async (id) => {
 
 exports.cleartimeout = catchAsyncErrors(async () => {
   if (timeoutId) {
-    console.log("clear");
     clearTimeout(timeoutId);
     timeoutId = null;
   }
