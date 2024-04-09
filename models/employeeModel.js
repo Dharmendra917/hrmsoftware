@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { dateAndTime } = require("../middlewares/dateAndTime");
 
 const employeeModel = mongoose.Schema({
   services: [{ type: mongoose.Schema.Types.ObjectId, ref: "incomeDetails" }],
@@ -97,8 +98,10 @@ employeeModel.methods.comparepassword = function (password) {
 
 //jwt
 employeeModel.methods.getjwttoken = function () {
+  const expiresIn = process.env.JWT_EXPIRE || "12h";
   return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRE,
+    expiresIn: expiresIn,
   });
 };
+
 module.exports = mongoose.model("employee", employeeModel);

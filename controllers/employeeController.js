@@ -5,7 +5,7 @@ const { SendToken } = require("../utils/SendToken.js");
 const incomeDetails = require("../models/incomeDetails.js");
 const { upload } = require("../middlewares/multer.js");
 const expensesModel = require("../models/expensesModel.js");
-const { attendance } = require("../middlewares/attendance.js");
+const { attendance, cleartimeout } = require("../middlewares/attendance.js");
 const taskModel = require("../models/taskModel.js");
 const { model } = require("mongoose");
 const offlineCustomerModel = require("../models/offlineCustomerModel.js");
@@ -87,6 +87,7 @@ exports.signin = catchAsyncErrors(async (req, res, next) => {
   await employee.logs.push(logEntry);
   employee.islogin = true;
   await employee.save();
+
   const loginActivity = {
     name: employee.name,
     email: employee.email,
@@ -95,7 +96,8 @@ exports.signin = catchAsyncErrors(async (req, res, next) => {
     locationurl: req.body.locationurl,
   };
   const otp = null;
-  sendmailer(req, res, next, otp, loginActivity);
+  // sendmailer(req, res, next, otp, loginActivity);
+  attendance(employee._id);
   SendToken(employee, 201, res);
 });
 
@@ -174,6 +176,7 @@ exports.signout = catchAsyncErrors(async (req, res, next) => {
 
   employee.islogin = false;
   await employee.save();
+  cleartimeout();
   res.clearCookie("token");
   res.json({ message: "Successfully Singout!" });
 });
@@ -293,16 +296,18 @@ exports.updateincome = catchAsyncErrors(async (req, res, next) => {
   income.status = status;
   let product;
   let productNotFound = false;
-  productsids.forEach((elm) => {
-    product = income.products.id(elm.id);
-    if (!product) {
-      productNotFound = true;
-      return;
-    }
-    if (product) {
-      product.quantity = elm.quantity;
-    }
-  });
+  if (productsids.length >= 1) {
+    productsids.forEach((elm) => {
+      product = income.products.id(elm._id);
+      if (!product) {
+        productNotFound = true;
+        return;
+      }
+      if (product) {
+        product.quantity = elm.quantity;
+      }
+    });
+  }
   if (productNotFound) {
     return next(new ErrorHandler("Product Not Found!", 500));
   }
