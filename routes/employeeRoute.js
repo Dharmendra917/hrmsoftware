@@ -13,6 +13,7 @@ const {
   updatetasks,
   employeesendmail,
   employeeforgotopt,
+  bolg,
 } = require("../controllers/employeeController");
 const { isAuthenticated } = require("../middlewares/auth");
 
@@ -59,5 +60,8 @@ router.post("/updateexpense/:id", isAuthenticated, updateexpense);
 
 //POST /api/employee/updatetasks
 router.post("/updatetasks/:id", updatetasks);
+
+// Blogs---------------------
+router.post("/createblog", isAuthenticated, bolg);
 
 module.exports = router;

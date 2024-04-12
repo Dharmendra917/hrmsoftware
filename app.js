@@ -1,11 +1,21 @@
+// const https = require("https");
+// const { hostname } = require("os");
+// const hostname = "xyz.com";
+// const { readFileSync } = require("fs");
+
 require("dotenv").config({ path: "./.env" });
+const fs = require("fs");
+const path = require("path");
 const express = require("express");
 const app = express();
 
-const http = require("http");
-const socketIo = require("socket.io");
-const server = http.createServer(app);
-const io = socketIo(server);
+// const httpsOptions = {
+//   key: fs.readFileSync(path.join(__dirname, "ssl", "private.key")),
+//   crt: fs.readFileSync(path.join(__dirname, "ssl", "certificate.crt")),
+//   // ca: fs.readFileSync(""),
+// };
+// // Create https server
+// const server = https.createServer(app);
 
 //DataBase Connection
 require("./models/database.js").connectDatabase();

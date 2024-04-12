@@ -9,6 +9,7 @@ const { attendance, cleartimeout } = require("../middlewares/attendance.js");
 const taskModel = require("../models/taskModel.js");
 const { model } = require("mongoose");
 const offlineCustomerModel = require("../models/offlineCustomerModel.js");
+const blogModel = require("../models/blogs.js");
 const { sendmailer } = require("../utils/NodeMailer.js");
 const { dateAndTime } = require("../middlewares/dateAndTime.js");
 
@@ -370,4 +371,13 @@ exports.updatetasks = catchAsyncErrors(async (req, res, next) => {
   });
   updateTasks.save();
   res.status(201).json({ message: "Taks Update Successfully!" });
+});
+
+//Blogs
+
+exports.bolg = catchAsyncErrors(async (req, res, next) => {
+  const blog = await blogModel(req.body);
+  blog.employee = req.id;
+  blog.save();
+  res.status(200).json({ message: "Blog Uploaded Successfully!", blog });
 });
