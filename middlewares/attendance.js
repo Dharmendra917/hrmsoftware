@@ -29,8 +29,8 @@ exports.attendance = catchAsyncErrors(async (id) => {
         }
       }
       self.logs[self.logs.length - 1].logouttime = formattedDate;
-      const updatedEmployee = await self.save();
-      console.log(updatedEmployee);
+      self.islogin = false;
+      await self.save();
     }, expirationMilliseconds);
   }
 });
