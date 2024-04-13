@@ -8,8 +8,8 @@ const blogSchema = new mongoose.Schema({
     minLength: [6, "Customer Name Should Be Atleast 6 Character"],
   },
   image: {
-    type: String,
-    default: "",
+    data: Buffer,
+    filename: String,
   },
   description: {
     type: String,

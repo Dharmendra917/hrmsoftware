@@ -7,6 +7,7 @@ const employeeModel = mongoose.Schema({
   services: [{ type: mongoose.Schema.Types.ObjectId, ref: "incomeDetails" }],
   expenses: [{ type: mongoose.Schema.Types.ObjectId, ref: "expenseDetails" }],
   tasks: [{ type: mongoose.Schema.Types.ObjectId, ref: "task" }],
+  blogs: [{ type: mongoose.Schema.Types.ObjectId, ref: "blog" }],
   attendance: {
     presents: [{ type: String }],
     halfdays: [{ type: String }],

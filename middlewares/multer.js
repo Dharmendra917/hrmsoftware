@@ -5,6 +5,10 @@ const storage = multer.memoryStorage();
 const limits = {
   fileSize: 1024 * 1024 * 2,
 };
+
+// if (limits.fileSize < size) {
+//   console.log(";ldkg");
+// }
 const fileFilter = (req, file, cb, next) => {
   if (
     file.mimetype === "image/jpeg" ||

@@ -16,6 +16,7 @@ const {
   bolg,
 } = require("../controllers/employeeController");
 const { isAuthenticated } = require("../middlewares/auth");
+const { upload } = require("../middlewares/multer");
 
 const router = express.Router();
 
@@ -62,6 +63,6 @@ router.post("/updateexpense/:id", isAuthenticated, updateexpense);
 router.post("/updatetasks/:id", updatetasks);
 
 // Blogs---------------------
-router.post("/createblog", isAuthenticated, bolg);
+router.get("/createblog", isAuthenticated, upload.single("image"), bolg);
 
 module.exports = router;

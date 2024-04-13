@@ -32,6 +32,7 @@ exports.currentEmployee = catchAsyncErrors(async (req, res) => {
     })
     .populate("expenses")
     .populate("tasks")
+    .populate({ path: "blogs", select: "-employee" })
     .exec();
   res.json(employee);
 });
@@ -374,10 +375,32 @@ exports.updatetasks = catchAsyncErrors(async (req, res, next) => {
 });
 
 //Blogs
-
+const path = require("path");
 exports.bolg = catchAsyncErrors(async (req, res, next) => {
-  const blog = await blogModel(req.body);
+  const file = req.file;
+  const body = req.body;
+  if (!req.file) {
+    return next(new ErrorHandler("Please Select File!"));
+  }
+  if (!body.description) {
+    return next(new ErrorHandler("Please Fill Blog Description!"));
+  }
+  if (!body.title) {
+    return next(new ErrorHandler("Please Fill Blog Title!"));
+  }
+  const { originalname, buffer } = file;
+  const fileName = Date.now() + path.extname(originalname);
+  const blog = await blogModel({
+    ...body,
+    image: { data: buffer, filename: fileName },
+  });
+  if (!req.id) {
+    return next(new ErrorHandler("Emoloyee Not Found! Please Login.", 500));
+  }
+  const employee = await employeeModel.findById(req.id);
   blog.employee = req.id;
+  await employee.blogs.push(blog._id);
   blog.save();
-  res.status(200).json({ message: "Blog Uploaded Successfully!", blog });
+  employee.save();
+  res.status(200).json({ message: "Blog Uploaded Successfully!" });
 });
