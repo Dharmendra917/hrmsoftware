@@ -13,7 +13,9 @@ const {
   updatetasks,
   employeesendmail,
   employeeforgotopt,
-  bolg,
+  createbolg,
+  updateblog,
+  deleteblog,
 } = require("../controllers/employeeController");
 const { isAuthenticated } = require("../middlewares/auth");
 const { upload } = require("../middlewares/multer");
@@ -63,6 +65,10 @@ router.post("/updateexpense/:id", isAuthenticated, updateexpense);
 router.post("/updatetasks/:id", updatetasks);
 
 // Blogs---------------------
-router.get("/createblog", isAuthenticated, upload.single("image"), bolg);
+router.get("/createblog", isAuthenticated, upload.single("image"), createbolg);
+
+router.post("/updateblog/:id", isAuthenticated, updateblog);
+
+router.post("/deleteblog/:id", isAuthenticated, deleteblog);
 
 module.exports = router;

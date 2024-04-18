@@ -376,7 +376,7 @@ exports.updatetasks = catchAsyncErrors(async (req, res, next) => {
 
 //Blogs
 const path = require("path");
-exports.bolg = catchAsyncErrors(async (req, res, next) => {
+exports.createbolg = catchAsyncErrors(async (req, res, next) => {
   const file = req.file;
   const body = req.body;
   if (!req.file) {
@@ -403,4 +403,18 @@ exports.bolg = catchAsyncErrors(async (req, res, next) => {
   blog.save();
   employee.save();
   res.status(200).json({ message: "Blog Uploaded Successfully!" });
+});
+
+exports.updateblog = catchAsyncErrors(async (req, res, next) => {
+  const data = req.body;
+  const blog = await blogModel.findByIdAndUpdate(req.params.id, data).exec();
+  res.status(201).json({ messge: "Blog Update Successfully", data, blog });
+});
+
+exports.deleteblog = catchAsyncErrors(async (req, res, next) => {
+  const data = req.body;
+  const blog = await blogModel.findByIdAndDelete(req.params.id).exec();
+  // const employee = await employeeModel.findById(req.id);
+  // const d = employee.blogs.();
+  res.status(201).json({ message: "Blog Delete Successfully!" });
 });
